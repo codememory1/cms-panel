@@ -1,0 +1,12 @@
+/.idea/
+/data/
+
+/api/config/secrets/dev
+/api/config/secrets/jwt-private.pem
+/api/config/secrets/jwt-public.pem
+
+/api/.env.local
+/api/.env.test
+
+/api/.phpunit.result.cache
+.DS_Store

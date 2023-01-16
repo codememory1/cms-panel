@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  nginx:
+    container_name: "${PROJECT_NAME}_nginx"
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    platform: linux/arm64
+    ports:
+      - "80:80"
+    volumes:
+      - "${DOCKER_ENV_PATH}/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+      - "${API_PATH}:${API_WORKDIR}"
+    links:
+      - api
+      - rabbitmq
+
+  api:
+    container_name: "${PROJECT_NAME}_api"
+    build:
+      context: ./
+      dockerfile: "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/Dockerfile"
+      args:
+        workdir: ${API_WORKDIR}
+        app_path: ${API_PATH}
+    expose:
+      - "9000"
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    volumes:
+      - "${API_PATH}:${API_WORKDIR}"
+      - "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini"
+    links:
+      - postgres
+      - mailhog
+
+  postgres:
+    container_name: "${PROJECT_NAME}_postgres"
+    image: postgres:14.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "${DATA_PATH}/postgres/data:/var/lib/postgresql/data/"
+
+  rabbitmq:
+    container_name: "${PROJECT_NAME}_rabbitmq"
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: "${RABBIT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBIT_PASSWORD}"
+      RABBITMQ_DEFAULT_VHOST: "${RABBIT_VHOST}"
+    expose:
+      - "5672"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - "./data/rabbitmq/:/var/lib/rabbitmq/"
+
+  mailhog:
+    container_name: "${PROJECT_NAME}_mailhog"
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
