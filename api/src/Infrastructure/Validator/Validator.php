@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Validator;
 
 use App\Exception\HttpException;
-use RuntimeException;
 use function call_user_func;
+use RuntimeException;
 use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
 
 final class Validator
@@ -32,10 +32,9 @@ final class Validator
 
     private function http(ConstraintInfo $constraintViolationInfo, ?callable $throw = null): void
     {
-        if ($throw === null) {
+        if (null === $throw) {
             throw new HttpException(400, $constraintViolationInfo->getMessage());
-        } else {
-            call_user_func($throw, $constraintViolationInfo);
         }
+        call_user_func($throw, $constraintViolationInfo);
     }
 }

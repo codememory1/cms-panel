@@ -8,7 +8,7 @@ use App\Rest\Response\Interfaces\FailedHttpResponseCollectorInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
-#[AsEventListener('kernel.exception')]
+#[AsEventListener('kernel.exception', 'onKernelException')]
 final class ApiExceptionListener
 {
     public function __construct(
