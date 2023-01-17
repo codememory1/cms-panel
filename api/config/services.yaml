@@ -36,6 +36,10 @@ services:
         public: false
 
 # Infrastructure
+    # Doctrine
+    App\Infrastructure\Doctrine\Flusher:
+        public: false
+
     # Dto Constraints
     App\Infrastructure\Dto\Constraints\:
         resource: '../src/Infrastructure/Dto/Constraints/*Handler.php'
