@@ -13,4 +13,9 @@ final class EntityNotFoundException extends HttpException
     {
         return new self('По данному запросу страницы не существует');
     }
+
+    public static function phone(): self
+    {
+        return new self('Номер телефона по данному идентификатору не существует');
+    }
 }

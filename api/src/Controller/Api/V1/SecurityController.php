@@ -15,6 +15,10 @@ class SecurityController extends AbstractController
     #[Route('/auth', methods: Request::METHOD_POST)]
     public function auth(AuthorizationTransformer $transformer, Authorization $authorization): SuccessHttpResponseCollectorInterface
     {
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+
+        dd($phoneUtil->parse('+380682423643'));
+
         return $this->response([
             'access_token' => $authorization->authorize($transformer->transformFromRequest())
         ]);
