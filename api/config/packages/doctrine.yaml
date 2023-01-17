@@ -1,6 +1,8 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        types:
+            password: App\DBAL\Types\PasswordType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

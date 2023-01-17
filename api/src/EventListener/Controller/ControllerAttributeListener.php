@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener\KernelController;
+namespace App\EventListener\Controller;
 
 use App\Infrastructure\ControllerAttribute\Interfaces\ControllerAttributeHandlerInterface;
 use App\Infrastructure\ControllerAttribute\Interfaces\ControllerAttributeInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ReverseContainer;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
-#[AsEventListener('kernel.controller')]
+#[AsEventListener('kernel.controller', 'onKernelController')]
 final class ControllerAttributeListener
 {
     public function __construct(

@@ -17,7 +17,8 @@ final class AccessGenerator
         private readonly string $pathToAccessJwtPublicSecret,
         private readonly string $pathToAccessJwtPrivateSecret,
         private readonly int $jwtAccessTtl
-    ) {}
+    ) {
+    }
 
     public function encode(array $data): string
     {
@@ -37,12 +38,11 @@ final class AccessGenerator
         }
     }
 
-    public function getSecretKey(string $parameterName): string
+    public function getSecretKey(string $pathToSecret): string
     {
         $kernelProjectDir = $this->parameterBag->get('kernel.project_dir');
-        $pathToFile = $this->parameterBag->get($parameterName);
 
-        return file_get_contents("$kernelProjectDir/$pathToFile");
+        return file_get_contents("{$kernelProjectDir}/{$pathToSecret}");
     }
 
     private function generateSub(): string
