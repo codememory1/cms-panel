@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Constraints\Dto\Constraints;
+namespace App\Infrastructure\Dto\Constraints;
 
 use App\Infrastructure\Dto\AbstractDataTransferConstraintHandler;
 use App\Infrastructure\Dto\Interfaces\DataTransferConstraintInterface;
