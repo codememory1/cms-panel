@@ -18,4 +18,19 @@ final class EntityNotFoundException extends HttpException
     {
         return new self('Номер телефона по данному идентификатору не существует');
     }
+
+    public static function permission(string $key): self
+    {
+        return new self("Разрешение с ключем \"{$key}\" не существует");
+    }
+
+    public static function rolePermission(): self
+    {
+        return new self('Разрешение роли по данному идентификатору не существует');
+    }
+
+    public static function role(): self
+    {
+        return new self('Роль по данному идентификатору не существует');
+    }
 }

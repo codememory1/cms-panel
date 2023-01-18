@@ -16,4 +16,6 @@ enum PermissionEnum: string
     case CREATE_USER = 'Создание пользователя';
     case UPDATE_USER = 'Обновление пользователя';
     case DELETE_USER = 'Удаление пользователя';
+    case ADD_PERMISSION_TO_ROLE = 'Добавление разрешений к ролям';
+    case DELETE_PERMISSION_TO_ROLE = 'Удаление разрешений у ролей';
 }

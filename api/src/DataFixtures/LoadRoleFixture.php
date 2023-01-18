@@ -15,22 +15,14 @@ final class LoadRoleFixture extends Fixture implements DependentFixtureInterface
     private array $roles = [
         [
             'title' => 'DEVELOPER',
-            'permissions' => [
-                PermissionEnum::ALL_PHONES,
-                PermissionEnum::CREATE_PHONE,
-                PermissionEnum::UPDATE_PHONE,
-                PermissionEnum::DELETE_PHONE,
-                PermissionEnum::ALL_ROLES,
-                PermissionEnum::CREATE_ROLE,
-                PermissionEnum::UPDATE_ROLE,
-                PermissionEnum::DELETE_ROLE,
-                PermissionEnum::ALL_USERS,
-                PermissionEnum::CREATE_USER,
-                PermissionEnum::UPDATE_USER,
-                PermissionEnum::DELETE_USER
-            ]
+            'permissions' => []
         ]
     ];
+
+    public function __construct()
+    {
+        $this->roles[0]['permissions'] = PermissionEnum::cases(); // Add all permissions to developer role
+    }
 
     public function load(ObjectManager $manager): void
     {
