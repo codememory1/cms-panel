@@ -25,6 +25,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+# Attribute
+    App\Attribute\:
+        resource: '../src/Attribute/*Handler.php'
+        public: true
+
 # Dto
     # Transformer
     App\Dto\Transformer\:

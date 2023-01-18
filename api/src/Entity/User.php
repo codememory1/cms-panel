@@ -30,6 +30,10 @@ class User implements EntityInterface
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
+
     public function __construct()
     {
         $this->generateUuid();
@@ -89,6 +93,18 @@ class User implements EntityInterface
     public function setStatus(UserStatusEnum $status): self
     {
         $this->status = $status->name;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

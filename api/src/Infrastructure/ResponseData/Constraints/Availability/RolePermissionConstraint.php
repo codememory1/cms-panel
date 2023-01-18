@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\ResponseData\Constraints\Availability;
 
-use App\Enum\RolePermissionEnum;
+use App\Enum\PermissionEnum;
 use App\Infrastructure\ResponseData\Interfaces\ConstraintInterface;
 use Attribute;
 
@@ -10,7 +10,7 @@ use Attribute;
 final class RolePermissionConstraint implements ConstraintInterface
 {
     public function __construct(
-        public readonly RolePermissionEnum $rolePermission
+        public readonly PermissionEnum $permission
     ) {
     }
 
