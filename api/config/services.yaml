@@ -10,7 +10,6 @@ services:
             $pathToAccessJwtPrivateSecret: '%env(JWT_ACCESS_PRIVATE_KEY)%'
             $jwtAccessTtl: '%env(int:JWT_ACCESS_TTL)%'
 
-    # Services
     App\:
         resource: '../src/'
         exclude:
@@ -25,6 +24,19 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+# Event Listeners
+    App\EventListener\Doctrine\EntityUpdateLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postUpdate }
+
+    App\EventListener\Doctrine\EntityCreateLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+
+    App\EventListener\Doctrine\EntityRemoveLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postRemove }
 
 # Attribute
     App\Attribute\:

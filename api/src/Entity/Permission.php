@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\EntityInterface;
+use App\Entity\Interfaces\LogInterface;
 use App\Entity\Traits\IdentifierTrait;
+use App\Entity\Traits\LogTrait;
 use App\Entity\Traits\TimestampTrait;
 use App\Repository\PermissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,10 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
 #[ORM\Table('permissions')]
 #[ORM\HasLifecycleCallbacks]
-class Permission implements EntityInterface
+class Permission implements EntityInterface, LogInterface
 {
     use IdentifierTrait;
     use TimestampTrait;
+    use LogTrait;
 
     #[ORM\Column(length: 100, unique: true)]
     private ?string $key = null;

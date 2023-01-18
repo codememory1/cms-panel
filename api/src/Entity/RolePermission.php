@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\EntityInterface;
+use App\Entity\Interfaces\LogInterface;
 use App\Entity\Traits\IdentifierTrait;
+use App\Entity\Traits\LogTrait;
 use App\Entity\Traits\TimestampTrait;
 use App\Repository\RolePermissionRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RolePermissionRepository::class)]
 #[ORM\Table('role_permissions')]
 #[ORM\HasLifecycleCallbacks]
-class RolePermission implements EntityInterface
+class RolePermission implements EntityInterface, LogInterface
 {
     use IdentifierTrait;
     use TimestampTrait;
+    use LogTrait;
 
     #[ORM\ManyToOne(inversedBy: 'permissions')]
     #[ORM\JoinColumn(nullable: false)]

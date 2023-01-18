@@ -19,4 +19,5 @@ enum PermissionEnum: string
     case DELETE_USER = 'Удаление пользователя';
     case ADD_PERMISSION_TO_ROLE = 'Добавление разрешений к ролям';
     case DELETE_PERMISSION_TO_ROLE = 'Удаление разрешений у ролей';
+    case ALL_ACTION_LOGS = 'Просмотр всех действий администраторов';
 }
