@@ -22,12 +22,14 @@ final class EntityUpdateLogEventListener
 
         if ($entity instanceof LogInterface && $entity->trackActivities()) {
             $changes = $this->em->getUnitOfWork()->getEntityChangeSet($entity);
-            $payload = [];
+            $payload = [
+                '_id' => $entity->getId(),
+                '_mutable_properties' => []
+            ];
 
             foreach ($changes as $propertyName => $change) {
                 if (!in_array($propertyName, $entity->ignoreProperties(), true)) {
-                    $payload[$propertyName] = [
-                        '_id' => $entity->getId(),
+                    $payload['_mutable_properties'][$propertyName] = [
                         'from' => $change[0],
                         'to' => $change[1]
                     ];
