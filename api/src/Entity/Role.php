@@ -40,7 +40,7 @@ class Role implements EntityInterface
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -53,6 +53,29 @@ class Role implements EntityInterface
     public function getPermissions(): Collection
     {
         return $this->permissions;
+    }
+
+    public function hasPermission(Permission $permission): bool
+    {
+        return $this
+            ->getPermissions()
+            ->exists(static fn(int $key, RolePermission $rolePermission) => $rolePermission->getPermission()->getKey() === $permission->getKey());
+    }
+
+    /**
+     * @param array<int, Permission> $permissions
+     */
+    public function setPermissions(array $permissions): self
+    {
+        foreach ($permissions as $permission) {
+            $rolePermission = new RolePermission();
+
+            $rolePermission->setPermission($permission);
+
+            $this->addPermission($rolePermission);
+        }
+
+        return $this;
     }
 
     public function addPermission(RolePermission $permission): self
