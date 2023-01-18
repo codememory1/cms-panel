@@ -14,6 +14,7 @@ final class LoadPermissionFixture extends Fixture
         foreach (PermissionEnum::cases() as $case) {
             $permission = new Permission();
 
+            $permission->setTrackActivities(false);
             $permission->setKey($case->name);
             $permission->setTitle($case->value);
 

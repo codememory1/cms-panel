@@ -42,6 +42,7 @@ final class LoadUserFixture extends Fixture implements DependentFixtureInterface
             $role = $this->getReference("r-{$userData['role']}");
             $user = new User();
 
+            $user->setTrackActivities(false);
             $user->setName($userData['name']);
             $user->setEmail($userData['email']);
             $user->setPassword($userData['password']);

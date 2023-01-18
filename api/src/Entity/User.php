@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\DBAL\Types\PasswordType;
 use App\Entity\Interfaces\EntityInterface;
+use App\Entity\Interfaces\LogInterface;
 use App\Entity\Traits\IdentifierTrait;
+use App\Entity\Traits\LogTrait;
 use App\Entity\Traits\TimestampTrait;
 use App\Enum\UserStatusEnum;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -15,10 +19,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Table(name: 'users')]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity('email', 'Пользователь с данной почтой уже существует')]
-class User implements EntityInterface
+class User implements EntityInterface, LogInterface
 {
     use IdentifierTrait;
     use TimestampTrait;
+    use LogTrait;
 
     #[ORM\Column(length: 100)]
     private ?string $name = null;
@@ -36,9 +41,13 @@ class User implements EntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 
+    #[ORM\OneToMany(mappedBy: 'executor', targetEntity: ActionLog::class, cascade: ['remove'])]
+    private Collection $actionLogs;
+
     public function __construct()
     {
         $this->generateUuid();
+        $this->actionLogs = new ArrayCollection();
     }
 
     public function getName(): ?string
@@ -112,6 +121,36 @@ class User implements EntityInterface
     public function setRole(?Role $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionLog>
+     */
+    public function getActionLogs(): Collection
+    {
+        return $this->actionLogs;
+    }
+
+    public function addActionLog(ActionLog $actionLog): self
+    {
+        if (!$this->actionLogs->contains($actionLog)) {
+            $this->actionLogs->add($actionLog);
+            $actionLog->setExecutor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionLog(ActionLog $actionLog): self
+    {
+        if ($this->actionLogs->removeElement($actionLog)) {
+            // set the owning side to null (unless already changed)
+            if ($actionLog->getExecutor() === $this) {
+                $actionLog->setExecutor(null);
+            }
+        }
 
         return $this;
     }

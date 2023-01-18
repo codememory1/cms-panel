@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\EntityInterface;
+use App\Entity\Interfaces\LogInterface;
 use App\Entity\Traits\IdentifierTrait;
+use App\Entity\Traits\LogTrait;
 use App\Entity\Traits\TimestampTrait;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,10 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ORM\Table('roles')]
 #[ORM\HasLifecycleCallbacks]
-class Role implements EntityInterface
+class Role implements EntityInterface, LogInterface
 {
     use IdentifierTrait;
     use TimestampTrait;
+    use LogTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -59,7 +62,7 @@ class Role implements EntityInterface
     {
         return $this
             ->getPermissions()
-            ->exists(static fn(int $key, RolePermission $rolePermission) => $rolePermission->getPermission()->getKey() === $permission->getKey());
+            ->exists(static fn (int $key, RolePermission $rolePermission) => $rolePermission->getPermission()->getKey() === $permission->getKey());
     }
 
     /**

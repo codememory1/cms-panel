@@ -29,6 +29,7 @@ final class LoadRoleFixture extends Fixture implements DependentFixtureInterface
         foreach ($this->roles as $roleData) {
             $role = new Role();
 
+            $role->setTrackActivities(false);
             $role->setTitle($roleData['title']);
 
             foreach ($roleData['permissions'] as $permissionData) {
@@ -36,6 +37,7 @@ final class LoadRoleFixture extends Fixture implements DependentFixtureInterface
                 $permission = $this->getReference("p-{$permissionData->name}");
                 $rolePermission = new RolePermission();
 
+                $rolePermission->setTrackActivities(false);
                 $rolePermission->setPermission($permission);
 
                 $role->addPermission($rolePermission);
