@@ -9,10 +9,12 @@ use App\Entity\Traits\TimestampTrait;
 use App\Enum\UserStatusEnum;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity('email', 'Пользователь с данной почтой уже существует')]
 class User implements EntityInterface
 {
     use IdentifierTrait;
@@ -24,7 +26,7 @@ class User implements EntityInterface
     #[ORM\Column(length: 320)]
     private ?string $email = null;
 
-    #[ORM\Column(type: PasswordType::NAME)]
+    #[ORM\Column(type: PasswordType::NAME, nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
@@ -44,7 +46,7 @@ class User implements EntityInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -56,7 +58,7 @@ class User implements EntityInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -68,7 +70,7 @@ class User implements EntityInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -90,9 +92,9 @@ class User implements EntityInterface
         return $this->getStatus() === UserStatusEnum::BLOCKED->name;
     }
 
-    public function setStatus(UserStatusEnum $status): self
+    public function setStatus(?UserStatusEnum $status): self
     {
-        $this->status = $status->name;
+        $this->status = $status?->name;
 
         return $this;
     }
@@ -100,6 +102,11 @@ class User implements EntityInterface
     public function getRole(): ?Role
     {
         return $this->role;
+    }
+
+    public function getRoleName(): ?string
+    {
+        return $this->getRole()?->getTitle();
     }
 
     public function setRole(?Role $role): self

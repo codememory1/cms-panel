@@ -9,6 +9,7 @@ enum PermissionEnum: string
     case UPDATE_PHONE = 'Редактирование телефона';
     case DELETE_PHONE = 'Удаление телефона';
     case ALL_ROLES = 'Просмотр всех ролей';
+    case ALL_PERMISSIONS = 'Просмотр всех разрешений для ролей';
     case CREATE_ROLE = 'Создание роли';
     case UPDATE_ROLE = 'Редактирование роли';
     case DELETE_ROLE = 'Удаление роли';
