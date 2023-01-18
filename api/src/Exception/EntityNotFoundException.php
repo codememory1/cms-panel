@@ -33,4 +33,9 @@ final class EntityNotFoundException extends HttpException
     {
         return new self('Роль по данному идентификатору не существует');
     }
+
+    public static function user(): self
+    {
+        return new self('Пользователь по данному идентификатору не существует');
+    }
 }
