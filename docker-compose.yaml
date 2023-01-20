@@ -14,6 +14,7 @@ services:
     links:
       - api
       - rabbitmq
+      - frontend
 
   api:
     container_name: "${PROJECT_NAME}_api"
@@ -68,3 +69,14 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+
+  frontend:
+    container_name: "${PROJECT_NAME}_frontend"
+    build:
+      context: ./
+      dockerfile: "${DOCKER_ENV_PATH}/frontend/Dockerfile"
+    volumes:
+      - "./frontend:/usr/src/frontend"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
