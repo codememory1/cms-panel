@@ -7,6 +7,10 @@ const config: NuxtConfig = {
     port: 3000
   },
 
+  router: {
+    middleware: ['auth']
+  },
+
   head: {
     title: 'CMS Admin',
 
