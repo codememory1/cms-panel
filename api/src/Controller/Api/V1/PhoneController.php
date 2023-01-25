@@ -35,7 +35,7 @@ class PhoneController extends AbstractController
         return $this->responseData($responseData, $createPhone->process($transformer->transformFromRequest()));
     }
 
-    #[Route('/{phone_id<.+>}/edit', methods: Request::METHOD_PUT)]
+    #[Route('/{phone_id<[^\/]+>}/edit', methods: Request::METHOD_PUT)]
     #[Authorization(PermissionEnum::UPDATE_PHONE)]
     public function update(
         #[EntityNotFound(EntityNotFoundException::class, 'phone')] Phone $phone,
@@ -46,7 +46,7 @@ class PhoneController extends AbstractController
         return $this->responseData($responseData, $updatePhone->process($transformer->transformFromRequest($phone)));
     }
 
-    #[Route('/{phone_id<.+>}/delete', methods: Request::METHOD_DELETE)]
+    #[Route('/{phone_id<[^\/]+>}/delete', methods: Request::METHOD_DELETE)]
     #[Authorization(PermissionEnum::DELETE_PHONE)]
     public function delete(
         #[EntityNotFound(EntityNotFoundException::class, 'phone')] Phone $phone,

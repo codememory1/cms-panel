@@ -18,4 +18,9 @@ final class BadException extends HttpException
     {
         return new self('Не удалось пройти аутентификацию с этим паролем');
     }
+
+    public static function badAuthAccountBlocked(): self
+    {
+        return new self('Не удалось пройти аутентификацию, аккаунт заблокирован');
+    }
 }

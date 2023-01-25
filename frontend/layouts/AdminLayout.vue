@@ -15,7 +15,7 @@
         <v-divider />
 
         <v-list dense>
-          <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item v-for="item in items" :key="item.title" @click="toRoute(item)">
             <v-list-item-content>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
@@ -27,7 +27,7 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-main>
+      <v-main class="overflow-auto">
         <Nuxt />
       </v-main>
     </v-layout>
@@ -38,15 +38,19 @@
 import { Component, Vue } from 'vue-property-decorator';
 import UserInfoResponseType from '~/types/user-info-response-type';
 
+type NavigationItem = {
+  title: string;
+  link: string;
+};
+
 @Component
 export default class AdminLayout extends Vue {
-  private readonly items = [
-    { title: 'Главная' },
-    { title: 'Пользователи' },
-    { title: 'Номера телефонов' },
-    { title: 'Роли пользователей' },
-    { title: 'Разрешения ролей' },
-    { title: 'Логирование действий' }
+  private readonly items: Array<NavigationItem> = [
+    { title: 'Пользователи', link: '/users' },
+    { title: 'Номера телефонов', link: '/phones' },
+    { title: 'Роли пользователей', link: '/roles' },
+    { title: 'Разрешения ролей', link: '/permissions' },
+    { title: 'Логирование действий', link: '/action-logs' }
   ];
 
   private get authorizedUserInfo(): UserInfoResponseType {
@@ -60,6 +64,10 @@ export default class AdminLayout extends Vue {
       this.$store.commit('modules/global-module/setAccessToken', '');
       this.$store.commit('modules/global-module/setUserInfo', null);
     }, 1000);
+  }
+
+  private toRoute(item: NavigationItem): void {
+    this.$router.push({ path: item.link });
   }
 }
 </script>

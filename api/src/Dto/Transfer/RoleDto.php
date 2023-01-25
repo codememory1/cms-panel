@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @template-extends AbstractDataTransfer<Role>
  */
-final class CreateRoleDto extends AbstractDataTransfer
+final class RoleDto extends AbstractDataTransfer
 {
     #[DtoConstraints\ValidationConstraint([
         new Assert\NotBlank(message: 'Название обязательно к заполнению'),

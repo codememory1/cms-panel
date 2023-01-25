@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Role;
 
-use App\Dto\Transfer\UpdateRoleDto;
+use App\Dto\Transfer\RoleDto;
 use App\Entity\Role;
 use App\Infrastructure\Doctrine\Flusher;
 use App\Infrastructure\Validator\Validator;
@@ -15,7 +15,7 @@ final class UpdateRole
     ) {
     }
 
-    public function process(UpdateRoleDto $dto): Role
+    public function process(RoleDto $dto): Role
     {
         $this->validator->validate($dto);
 

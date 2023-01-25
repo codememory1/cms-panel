@@ -75,7 +75,7 @@ export default class Login extends Vue {
       .then((response) => {
         this.$store.commit('modules/global-module/setUserInfo', response.data.data);
 
-        this.$router.push({ name: 'index' });
+        this.$router.push({ name: 'users' });
       });
   }
 }

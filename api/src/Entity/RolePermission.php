@@ -19,7 +19,7 @@ class RolePermission implements EntityInterface, LogInterface
     use TimestampTrait;
     use LogTrait;
 
-    #[ORM\ManyToOne(inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'permissions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 

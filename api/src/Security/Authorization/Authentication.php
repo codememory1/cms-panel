@@ -16,6 +16,10 @@ final class Authentication
 
     public function authenticate(User $identifiedUser, AuthorizationDto $dto): void
     {
+        if ($identifiedUser->isBlocked()) {
+            throw BadException::badAuthAccountBlocked();
+        }
+
         if (!$this->passwordHashing->compare($dto->password, $identifiedUser->getPassword())) {
             throw BadException::badPassword();
         }

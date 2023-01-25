@@ -11,6 +11,10 @@ final class UserResponseData extends AbstractResponseData
     private ?string $name = null;
     private ?string $email = null;
     private ?string $status = null;
+
+    #[RDCV\CallbackResponseData(RoleResponseData::class)]
+    private array $role = [];
+
     private ?string $roleName = null;
 
     #[RDCV\DateTime]

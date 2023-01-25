@@ -40,7 +40,7 @@ class UserController extends AbstractController
         return $this->responseData($responseData, $createUser->process($transformer->transformFromRequest()));
     }
 
-    #[Route('/{user_id<.+>}/edit', methods: Request::METHOD_PUT)]
+    #[Route('/{user_id<[^\/]+>}/edit', methods: Request::METHOD_PUT)]
     #[Authorization(PermissionEnum::UPDATE_USER)]
     public function update(
         #[EntityNotFound(EntityNotFoundException::class, 'user')] User $user,
@@ -51,7 +51,7 @@ class UserController extends AbstractController
         return $this->responseData($responseData, $updateUser->process($transformer->transformFromRequest($user)));
     }
 
-    #[Route('/{user_id<.+>}/delete', methods: Request::METHOD_DELETE)]
+    #[Route('/{user_id<[^\/]+>}/delete', methods: Request::METHOD_DELETE)]
     #[Authorization(PermissionEnum::DELETE_USER)]
     public function delete(
         #[EntityNotFound(EntityNotFoundException::class, 'user')] User $user,
@@ -61,7 +61,7 @@ class UserController extends AbstractController
         return $this->responseData($responseData, $deleteUser->process($user));
     }
 
-    #[Route('/{user_id<.+>}/password/edit', methods: Request::METHOD_PATCH)]
+    #[Route('/{user_id<[^\/]+>}/password/edit', methods: Request::METHOD_PUT)]
     #[Authorization(PermissionEnum::UPDATE_USER)]
     public function updatePassword(
         #[EntityNotFound(EntityNotFoundException::class, 'user')] User $user,

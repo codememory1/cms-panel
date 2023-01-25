@@ -2,7 +2,7 @@
 
 namespace App\Dto\Transformer;
 
-use App\Dto\Transfer\CreateRoleDto;
+use App\Dto\Transfer\RoleDto;
 use App\Entity\Interfaces\EntityInterface;
 use App\Entity\Role;
 use App\Infrastructure\Dto\AbstractDataTransformer;
@@ -10,13 +10,13 @@ use App\Infrastructure\Dto\Interfaces\DataTransferInterface;
 use App\Rest\Request;
 
 /**
- * @template-extends AbstractDataTransformer<CreateRoleDto>
+ * @template-extends AbstractDataTransformer<RoleDto>
  */
-final class CreateRoleTransformer extends AbstractDataTransformer
+final class RoleTransformer extends AbstractDataTransformer
 {
     public function __construct(
         Request $request,
-        private readonly CreateRoleDto $dto
+        private readonly RoleDto $dto
     ) {
         parent::__construct($request);
     }
