@@ -53,10 +53,7 @@ export default class Login extends Vue {
         .then((response) => {
           this.buttonsIsLoading = false;
 
-          this.$store.commit(
-            'modules/global-module/setAccessToken',
-            response.data.data.access_token
-          );
+          this.successAuth(response);
         })
         .catch((error) => {
           this.buttonsIsLoading = false;
@@ -64,6 +61,22 @@ export default class Login extends Vue {
           this.error = error.response.data.error;
         });
     }
+  }
+
+  private successAuth(response: any): void {
+    this.$store.commit('modules/global-module/setAccessToken', response.data.data.access_token);
+
+    this.$api
+      .get('/security/user/info', {
+        headers: {
+          Authorization: `Bearer ${response.data.data.access_token}`
+        }
+      })
+      .then((response) => {
+        this.$store.commit('modules/global-module/setUserInfo', response.data.data);
+
+        this.$router.push({ name: 'users' });
+      });
   }
 }
 </script>

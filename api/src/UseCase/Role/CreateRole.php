@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Role;
 
-use App\Dto\Transfer\CreateRoleDto;
+use App\Dto\Transfer\RoleDto;
 use App\Entity\Role;
 use App\Infrastructure\Doctrine\Flusher;
 use App\Infrastructure\Validator\Validator;
@@ -15,7 +15,7 @@ final class CreateRole
     ) {
     }
 
-    public function process(CreateRoleDto $dto): Role
+    public function process(RoleDto $dto): Role
     {
         $this->validator->validate($dto);
 

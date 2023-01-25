@@ -7,6 +7,7 @@ use App\Entity\Interfaces\LogInterface;
 use App\Service\AuthorizedUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use libphonenumber\PhoneNumber;
 
 final class EntityUpdateLogEventListener
 {
@@ -30,8 +31,8 @@ final class EntityUpdateLogEventListener
             foreach ($changes as $propertyName => $change) {
                 if (!in_array($propertyName, $entity->ignoreProperties(), true)) {
                     $payload['_mutable_properties'][$propertyName] = [
-                        'from' => $change[0],
-                        'to' => $change[1]
+                        'from' => $this->converterValue($change[0]),
+                        'to' => $this->converterValue($change[1])
                     ];
                 }
             }
@@ -47,5 +48,14 @@ final class EntityUpdateLogEventListener
         }
 
         $this->em->flush();
+    }
+
+    private function converterValue(mixed $value): mixed
+    {
+        if ($value instanceof PhoneNumber) {
+            return "+{$value->getCountryCode()}{$value->getNationalNumber()}";
+        }
+
+        return $value;
     }
 }

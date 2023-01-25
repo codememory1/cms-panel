@@ -5,6 +5,7 @@ namespace App\Rest\Controller;
 use App\Entity\Interfaces\EntityInterface;
 use App\Infrastructure\ResponseData\Interfaces\ResponseDataInterface;
 use App\Rest\Response\Interfaces\SuccessHttpResponseCollectorInterface;
+use App\Service\AuthorizedUser;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SfController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractController extends SfController
 {
     public function __construct(
-        protected readonly SuccessHttpResponseCollectorInterface $successHttpResponseCollector
+        protected readonly SuccessHttpResponseCollectorInterface $successHttpResponseCollector,
+        protected readonly AuthorizedUser $authorizedUser
     ) {
     }
 
