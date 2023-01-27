@@ -9,6 +9,7 @@ services:
             $pathToAccessJwtPublicSecret: '%env(JWT_ACCESS_PUBLIC_KEY)%'
             $pathToAccessJwtPrivateSecret: '%env(JWT_ACCESS_PRIVATE_KEY)%'
             $jwtAccessTtl: '%env(int:JWT_ACCESS_TTL)%'
+            $smsApiKey: '%env(SMS_API_KEY)%'
 
     App\:
         resource: '../src/'

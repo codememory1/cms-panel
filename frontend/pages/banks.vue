@@ -11,53 +11,41 @@
     <template #modals>
       <UpdateModal
         ref="editModal"
-        modal-title="Редактирование роли"
+        modal-title="Редактирование банка"
         @close="crudService.closeEditableModal()"
         @update="updateEntity"
       >
         <v-text-field
           v-model="inputData.title.value"
           :error="inputData.title.error"
-          label="Название"
+          label="Номер телефона"
         />
-        <v-autocomplete
-          v-model="inputData.permissions.value"
-          :error-messages="permissionsCrudService.getErrors().atAll"
-          :error="permissionsCrudService.getErrors().atAll !== null || inputData.permissions.error"
-          :items="permissionsCrudService.getEntities()"
-          label="Укажите разрешения"
-          item-text="title"
-          item-value="key"
-          multiple
-          dense
+        <v-text-field
+          v-model="inputData.number.value"
+          :error="inputData.number.error"
+          label="Номер банка"
         />
       </UpdateModal>
       <CreateModal
         ref="createModal"
-        button-title="Создать роль"
-        modal-title="Создание роли"
+        button-title="Добавить банк"
+        modal-title="Добавление банка"
         @create="createEntity"
       >
         <v-text-field
           v-model="inputData.title.value"
           :error="inputData.title.error"
-          label="Название"
+          label="Название банка"
         />
-        <v-autocomplete
-          v-model="inputData.permissions.value"
-          :error-messages="permissionsCrudService.getErrors().atAll"
-          :error="permissionsCrudService.getErrors().atAll !== null || inputData.permissions.error"
-          :items="permissionsCrudService.getEntities()"
-          label="Укажите разрешения"
-          item-text="title"
-          item-value="key"
-          multiple
-          dense
+        <v-text-field
+          v-model="inputData.number.value"
+          :error="inputData.number.error"
+          label="Номер банка"
         />
       </CreateModal>
       <DeleteModal
         ref="deleteModal"
-        modal-title="Удаление роли"
+        modal-title="Удаление телефона"
         @delete="deleteEntity"
         @close="crudService.closeDeleteModal()"
       />
@@ -83,10 +71,11 @@ import CrudService from '~/services/crud-service';
     DeleteModal
   }
 })
-export default class Roles extends Vue {
+export default class Banks extends Vue {
   private readonly headers = {
     id: 'Идентификатор',
-    title: 'Название',
+    title: 'Название банка',
+    number: 'Номер банка',
     created_at: 'Создано в',
     updated_at: 'Обновлено в',
     actions: 'Действия'
@@ -97,18 +86,16 @@ export default class Roles extends Vue {
       error: false,
       value: null
     },
-    permissions: {
+    number: {
       error: false,
-      value: []
+      value: null
     }
   };
 
   private readonly crudService: CrudService = new CrudService(this);
-  private readonly permissionsCrudService: CrudService = new CrudService(this);
 
   public async mounted(): Promise<void> {
-    await this.crudService.allRequest('/role/all', this.$store, true);
-    await this.permissionsCrudService.allRequest('/permission/all', this.$store);
+    await this.crudService.allRequest('/bank/all', this.$store, true);
   }
 
   private openDeleteModal(entity: object): void {
@@ -118,23 +105,21 @@ export default class Roles extends Vue {
   private openEditModal(entity: object): void {
     this.crudService.openEditModal(entity, this.inputData, (entity: any) => {
       this.inputData.title.value = entity.title;
-      this.inputData.permissions.value = entity.permissions.map((permission: any) => {
-        return permission.permission.key;
-      });
+      this.inputData.number.value = entity.number;
     });
   }
 
   private deleteEntity(): void {
-    this.crudService.deleteRequest(`/role/${this.crudService.getEditedEntity().id}/delete`);
+    this.crudService.deleteRequest(`/bank/${this.crudService.getEditedEntity().id}/delete`);
   }
 
   private async createEntity(): Promise<void> {
-    await this.crudService.createRequest('/role/create', this.inputData);
+    await this.crudService.createRequest('/bank/create', this.inputData);
   }
 
   private async updateEntity(): Promise<void> {
     await this.crudService.editRequest(
-      `/role/${this.crudService.getEditedEntity().id}/edit`,
+      `/bank/${this.crudService.getEditedEntity().id}/edit`,
       this.inputData
     );
   }

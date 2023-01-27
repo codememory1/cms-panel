@@ -20,19 +20,21 @@ import CrudService from '~/services/crud-service';
     BaseTable
   }
 })
-export default class Permissions extends Vue {
+export default class Transactions extends Vue {
   private readonly headers = {
     id: 'Идентификатор',
-    key: 'Ключ',
-    title: 'Название',
-    created_at: 'Создано в',
-    updated_at: 'Обновлено в'
+    type: 'Тип',
+    'card.name': 'Имя карточки',
+    'card.number': 'Последние цифры карты',
+    completed_on_time: 'Время завершения',
+    sum: 'Сумма',
+    created_at: 'Создано в'
   };
 
   private readonly crudService: CrudService = new CrudService(this);
 
   public async mounted(): Promise<void> {
-    await this.crudService.allRequest('/permission/all', this.$store, true);
+    await this.crudService.allRequest('/transaction/all', this.$store, true);
   }
 }
 </script>
