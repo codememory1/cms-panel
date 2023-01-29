@@ -2,6 +2,8 @@ import colors from 'vuetify/es5/util/colors';
 import { NuxtConfig } from '@nuxt/types';
 
 const config: NuxtConfig = {
+  dev: false,
+
   server: {
     host: '0.0.0.0',
     port: 3000
