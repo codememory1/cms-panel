@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Attribute;
 
 use Attribute;
 

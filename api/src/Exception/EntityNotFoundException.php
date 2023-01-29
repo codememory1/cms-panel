@@ -38,4 +38,14 @@ final class EntityNotFoundException extends HttpException
     {
         return new self('Пользователь по данному идентификатору не существует');
     }
+
+    public static function bank(): self
+    {
+        return new self('Банк по данному идентификатору не существует');
+    }
+
+    public static function bankExpression(): self
+    {
+        return new self('Выражение банка по данному идентификатору не существует');
+    }
 }

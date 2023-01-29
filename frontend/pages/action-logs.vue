@@ -32,7 +32,7 @@ import InformationModal from '~/components/Modal/InformationModal.vue';
     InformationModal
   }
 })
-export default class Users extends Vue {
+export default class ActionLogs extends Vue {
   private readonly headers = {
     'executor.id': 'Идентификатор исполнителя',
     'executor.name': 'Имя исполнителя',

@@ -2,7 +2,9 @@
   <v-dialog v-model="isOpen" max-width="500px">
     <v-card>
       <v-card-title class="text-h5">{{ modalTitle }}</v-card-title>
-      <v-alert v-if="error !== null" outlined type="error">{{ error }}</v-alert>
+      <v-card-text>
+        <v-alert v-if="error !== null" outlined type="error">{{ error }}</v-alert>
+      </v-card-text>
       <v-card-text>Подтверждаете ли вы удаление сущности ?</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

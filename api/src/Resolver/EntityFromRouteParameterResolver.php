@@ -2,7 +2,7 @@
 
 namespace App\Resolver;
 
-use App\Annotation\EntityNotFound;
+use App\Attribute\EntityNotFound;
 use App\Entity\Interfaces\EntityInterface;
 use App\Exception\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
