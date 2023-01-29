@@ -20,6 +20,15 @@
           :error="inputData.number.error"
           label="Номер телефона"
         />
+        <v-select
+          v-model="inputData.status.value"
+          :error="inputData.status.error"
+          :items="statuses"
+          item-text="text"
+          item-value="value"
+          label="Укажите статус"
+          dense
+        />
       </UpdateModal>
       <CreateModal
         ref="createModal"
@@ -31,6 +40,15 @@
           v-model="inputData.number.value"
           :error="inputData.number.error"
           label="Номер телефона"
+        />
+        <v-select
+          v-model="inputData.status.value"
+          :error="inputData.status.error"
+          :items="statuses"
+          item-text="text"
+          item-value="value"
+          label="Укажите статус"
+          dense
         />
       </CreateModal>
       <DeleteModal
@@ -61,18 +79,28 @@ import CrudService from '~/services/crud-service';
     DeleteModal
   }
 })
-export default class Users extends Vue {
+export default class Phones extends Vue {
   private readonly headers = {
     id: 'Идентификатор',
     'number.country_code': 'Код страны',
     'number.number': 'Телефон',
+    status: 'Статус',
     created_at: 'Создано в',
     updated_at: 'Обновлено в',
     actions: 'Действия'
   };
 
+  private readonly statuses = [
+    { text: 'Доступный', value: 'ALLOWED' },
+    { text: 'Недоступный', value: 'NOT_ALLOWED' }
+  ];
+
   private inputData = {
     number: {
+      error: false,
+      value: null
+    },
+    status: {
       error: false,
       value: null
     }
@@ -91,6 +119,7 @@ export default class Users extends Vue {
   private openEditModal(entity: object): void {
     this.crudService.openEditModal(entity, this.inputData, (entity: any) => {
       this.inputData.number.value = `+${entity.number.country_code + entity.number.number}`;
+      this.inputData.status.value = entity.status;
     });
   }
 

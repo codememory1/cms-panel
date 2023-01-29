@@ -13,4 +13,9 @@ final class ConflictException extends HttpException
     {
         return new self("Данная роль уже имеет разрешение \"{$permission}\"");
     }
+
+    public static function expressionForBankExist(): self
+    {
+        return new self('Выражения для данного банка уже существует');
+    }
 }

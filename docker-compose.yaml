@@ -13,7 +13,6 @@ services:
       - "${API_PATH}:${API_WORKDIR}"
     links:
       - api
-      - rabbitmq
       - frontend
 
   api:
@@ -33,7 +32,6 @@ services:
       - "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini"
     links:
       - postgres
-      - mailhog
 
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
@@ -48,28 +46,6 @@ services:
     volumes:
       - "${DATA_PATH}/postgres/data:/var/lib/postgresql/data/"
 
-  rabbitmq:
-    container_name: "${PROJECT_NAME}_rabbitmq"
-    image: rabbitmq:3-management
-    environment:
-      RABBITMQ_DEFAULT_USER: "${RABBIT_USER}"
-      RABBITMQ_DEFAULT_PASS: "${RABBIT_PASSWORD}"
-      RABBITMQ_DEFAULT_VHOST: "${RABBIT_VHOST}"
-    expose:
-      - "5672"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - "./data/rabbitmq/:/var/lib/rabbitmq/"
-
-  mailhog:
-    container_name: "${PROJECT_NAME}_mailhog"
-    image: mailhog/mailhog
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-
   frontend:
     container_name: "${PROJECT_NAME}_frontend"
     build:
@@ -80,3 +56,19 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+
+  parser:
+    container_name: "${PROJECT_NAME}_parser"
+    build:
+      context: ./
+      dockerfile: "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/Dockerfile"
+      args:
+        workdir: ${API_WORKDIR}
+        app_path: ${API_PATH}
+    volumes:
+      - "${API_PATH}:${API_WORKDIR}"
+      - "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini"
+    command: sh -c "sleep 30 && bin/console --no-debug -q app:worker:parser"
+    restart: unless-stopped
+    depends_on:
+      - api

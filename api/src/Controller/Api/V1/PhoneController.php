@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\V1;
 
-use App\Annotation\EntityNotFound;
+use App\Attribute\EntityNotFound;
 use App\Attribute\Authorization;
 use App\Dto\Transformer\PhoneTransformer;
 use App\Entity\Phone;
