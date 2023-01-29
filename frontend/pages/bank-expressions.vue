@@ -15,15 +15,25 @@
         @close="crudService.closeEditableModal()"
         @update="updateEntity"
       >
-        <v-text-field
-          v-model="inputData.title.value"
-          :error="inputData.title.error"
-          label="Номер телефона"
+        <v-textarea
+          v-model="inputData.transfer.value"
+          :error="inputData.transfer.error"
+          label="Выражения перевода"
         />
-        <v-text-field
-          v-model="inputData.number.value"
-          :error="inputData.number.error"
-          label="Номер банка"
+        <v-textarea
+          v-model="inputData.enrollment.value"
+          :error="inputData.enrollment.error"
+          label="Выражения зачисления"
+        />
+        <v-textarea
+          v-model="inputData.payment.value"
+          :error="inputData.payment.error"
+          label="Выражения оплаты"
+        />
+        <v-textarea
+          v-model="inputData.purchase.value"
+          :error="inputData.purchase.error"
+          label="Выражения покупки"
         />
       </UpdateModal>
       <CreateModal
@@ -32,15 +42,35 @@
         modal-title="Добавление выражения"
         @create="createEntity"
       >
-        <v-text-field
-          v-model="inputData.title.value"
-          :error="inputData.title.error"
-          label="Название банка"
+        <v-autocomplete
+          v-model="createInputData.bank.value"
+          :error-messages="banksCrudService.getErrors().atAll"
+          :error="banksCrudService.getErrors().atAll !== null || createInputData.bank.error"
+          :items="banksCrudService.getEntities()"
+          label="Укажите банк"
+          item-text="title"
+          item-value="id"
+          dense
         />
-        <v-text-field
-          v-model="inputData.number.value"
-          :error="inputData.number.error"
-          label="Номер банка"
+        <v-textarea
+          v-model="createInputData.transfer.value"
+          :error="createInputData.transfer.error"
+          label="Выражения перевода"
+        />
+        <v-textarea
+          v-model="createInputData.enrollment.value"
+          :error="createInputData.enrollment.error"
+          label="Выражения зачисления"
+        />
+        <v-textarea
+          v-model="createInputData.payment.value"
+          :error="createInputData.payment.error"
+          label="Выражения оплаты"
+        />
+        <v-textarea
+          v-model="createInputData.purchase.value"
+          :error="createInputData.purchase.error"
+          label="Выражения покупки"
         />
       </CreateModal>
       <DeleteModal
@@ -83,14 +113,45 @@ export default class BankExpressions extends Vue {
     actions: 'Действия'
   };
 
-  private inputData = {
-    title: {
+  private createInputData = {
+    bank: {
       error: false,
       value: null
     },
-    number: {
+    transfer: {
       error: false,
-      value: null
+      value: '[]'
+    },
+    enrollment: {
+      error: false,
+      value: '[]'
+    },
+    payment: {
+      error: false,
+      value: '[]'
+    },
+    purchase: {
+      error: false,
+      value: '[]'
+    }
+  };
+
+  private inputData = {
+    transfer: {
+      error: false,
+      value: '[]'
+    },
+    enrollment: {
+      error: false,
+      value: '[]'
+    },
+    payment: {
+      error: false,
+      value: '[]'
+    },
+    purchase: {
+      error: false,
+      value: '[]'
     }
   };
 
@@ -108,22 +169,26 @@ export default class BankExpressions extends Vue {
 
   private openEditModal(entity: object): void {
     this.crudService.openEditModal(entity, this.inputData, (entity: any) => {
-      this.inputData.title.value = entity.title;
-      this.inputData.number.value = entity.number;
+      this.inputData.transfer.value = JSON.stringify(entity.transfer);
+      this.inputData.enrollment.value = JSON.stringify(entity.enrollment);
+      this.inputData.payment.value = JSON.stringify(entity.payment);
+      this.inputData.purchase.value = JSON.stringify(entity.purchase);
     });
   }
 
   private deleteEntity(): void {
-    this.crudService.deleteRequest(`/bank/${this.crudService.getEditedEntity().id}/delete`);
+    this.crudService.deleteRequest(
+      `/bank/${this.crudService.getEditedEntity().id}/expression/delete`
+    );
   }
 
   private async createEntity(): Promise<void> {
-    await this.crudService.createRequest('/bank/create', this.inputData);
+    await this.crudService.createRequest('/bank/expression/create', this.createInputData);
   }
 
   private async updateEntity(): Promise<void> {
     await this.crudService.editRequest(
-      `/bank/${this.crudService.getEditedEntity().id}/edit`,
+      `/bank/${this.crudService.getEditedEntity().bank.id}/expression/edit`,
       this.inputData
     );
   }

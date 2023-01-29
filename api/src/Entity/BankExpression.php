@@ -20,7 +20,7 @@ class BankExpression implements EntityInterface, LogInterface
     use TimestampTrait;
     use LogTrait;
 
-    #[ORM\OneToOne(inversedBy: 'expression', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'expression')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Bank $bank = null;
 
@@ -46,7 +46,7 @@ class BankExpression implements EntityInterface, LogInterface
         return $this->bank;
     }
 
-    public function setBank(Bank $bank): self
+    public function setBank(?Bank $bank): self
     {
         $this->bank = $bank;
 

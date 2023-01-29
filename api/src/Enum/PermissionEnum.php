@@ -26,5 +26,6 @@ enum PermissionEnum: string
     case DELETE_BANK = 'Удаление банка';
     case ALL_BANK_REGEXP = 'Просмотр регулярных выражений банка';
     case UPDATE_BANK_REGEXP = 'Обновление регулярных выражений банка';
+    case DELETE_BANK_REGEXP = 'Удаление регулярных выражений банка';
     case ALL_TRANSACTIONS = 'Просмотр транзакций';
 }

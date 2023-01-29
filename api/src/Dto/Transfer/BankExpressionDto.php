@@ -9,7 +9,7 @@ use App\Infrastructure\Dto\Constraints as DtoConstraints;
 /**
  * @template-extends AbstractDataTransfer<BankExpression>
  */
-final class BankExpressionDto extends AbstractDataTransfer
+class BankExpressionDto extends AbstractDataTransfer
 {
     #[DtoConstraints\ToTypeConstraint]
     public array $transfer = [];

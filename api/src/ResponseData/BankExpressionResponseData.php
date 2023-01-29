@@ -7,6 +7,7 @@ use App\Infrastructure\ResponseData\Constraints\Value as RDCV;
 
 final class BankExpressionResponseData extends AbstractResponseData
 {
+    private ?string $id = null;
     #[RDCV\CallbackResponseData(BankResponseData::class, onlyProperties: ['id', 'title'])]
     private array $bank = [];
 

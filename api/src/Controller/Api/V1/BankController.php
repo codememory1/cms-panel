@@ -2,11 +2,13 @@
 
 namespace App\Controller\Api\V1;
 
-use App\Annotation\EntityNotFound;
+use App\Attribute\EntityNotFound;
 use App\Attribute\Authorization;
 use App\Dto\Transformer\BankExpressionTransformer;
 use App\Dto\Transformer\BankTransformer;
+use App\Dto\Transformer\CreateBankExpressionTransformer;
 use App\Entity\Bank;
+use App\Entity\BankExpression;
 use App\Enum\PermissionEnum;
 use App\Exception\EntityNotFoundException;
 use App\Repository\BankExpressionRepository;
@@ -17,6 +19,8 @@ use App\Rest\Controller\AbstractController;
 use App\Rest\Response\Interfaces\HttpResponseCollectorInterface;
 use App\UseCase\Bank\CreateBank;
 use App\UseCase\Bank\DeleteBank;
+use App\UseCase\Bank\Expression\CreateBankExpression;
+use App\UseCase\Bank\Expression\DeleteBankExpression;
 use App\UseCase\Bank\Expression\UpdateBankExpression;
 use App\UseCase\Bank\UpdateBank;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,6 +84,13 @@ final class BankController extends AbstractController
     }
 
     #[Authorization(PermissionEnum::UPDATE_BANK_REGEXP)]
+    #[Route('/expression/create', methods: Request::METHOD_POST)]
+    public function createExpression(BankExpressionResponseData $responseData, CreateBankExpressionTransformer $transformer, CreateBankExpression $createBankExpression): HttpResponseCollectorInterface
+    {
+        return $this->responseData($responseData, $createBankExpression->process($transformer->transformFromRequest()));
+    }
+
+    #[Authorization(PermissionEnum::UPDATE_BANK_REGEXP)]
     #[Route('/{bank_id<[^\/]+>}/expression/edit', methods: Request::METHOD_PUT)]
     public function updateExpression(
         #[EntityNotFound(EntityNotFoundException::class, 'bank')] Bank $bank,
@@ -89,5 +100,16 @@ final class BankController extends AbstractController
     ): HttpResponseCollectorInterface
     {
         return $this->responseData($responseData, $updateBankExpression->process($transformer->transformFromRequest($bank->getExpression())));
+    }
+
+    #[Authorization(PermissionEnum::DELETE_BANK_REGEXP)]
+    #[Route('/{bankExpression_id<[^\/]+>}/expression/delete', methods: Request::METHOD_DELETE)]
+    public function deleteExpression(
+        #[EntityNotFound(EntityNotFoundException::class, 'bankExpression')] BankExpression $bankExpression,
+        BankExpressionResponseData $responseData,
+        DeleteBankExpression $deleteBankExpression
+    ): HttpResponseCollectorInterface
+    {
+        return $this->responseData($responseData, $deleteBankExpression->process($bankExpression));
     }
 }

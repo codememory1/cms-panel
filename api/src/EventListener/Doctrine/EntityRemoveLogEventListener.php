@@ -29,8 +29,7 @@ final class EntityRemoveLogEventListener
             $actionLog->setPayload(['id' => $entity->getId()]);
 
             $this->em->persist($actionLog);
+            $this->em->flush($actionLog);
         }
-
-        $this->em->flush();
     }
 }
