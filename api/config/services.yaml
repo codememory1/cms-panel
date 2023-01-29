@@ -1,15 +1,129 @@
 parameters:
+    jwt.secrets: 'config/secrets/'
 
 services:
-    # Default configuration
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $pathToAccessJwtPublicSecret: '%env(JWT_ACCESS_PUBLIC_KEY)%'
+            $pathToAccessJwtPrivateSecret: '%env(JWT_ACCESS_PRIVATE_KEY)%'
+            $jwtAccessTtl: '%env(int:JWT_ACCESS_TTL)%'
+            $smsApiKey: '%env(SMS_API_KEY)%'
 
-    # Services
     App\:
         resource: '../src/'
         exclude:
+            - '../src/Dto/'
+            - '../src/Exception/'
+            - '../src/Infrastructure/'
+            - '../src/Package/'
+            - '../src/Rest/'
+            - '../src/Security/'
+            - '../src/Service/'
+            - '../src/UseCase/'
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+# Event Listeners
+    App\EventListener\Doctrine\EntityUpdateLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postUpdate }
+
+    App\EventListener\Doctrine\EntityCreateLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+
+    App\EventListener\Doctrine\EntityRemoveLogEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postRemove }
+
+# Attribute
+    App\Attribute\:
+        resource: '../src/Attribute/*Handler.php'
+        public: true
+
+# Dto
+    # Transformer
+    App\Dto\Transformer\:
+        resource: '../src/Dto/Transformer/*Transformer.php'
+        public: false
+
+    App\Dto\Transfer\:
+        resource: '../src/Dto/Transfer/*Dto.php'
+        public: false
+
+# Infrastructure
+    # Doctrine
+    App\Infrastructure\Doctrine\Flusher:
+        public: false
+
+    # Dto Constraints
+    App\Infrastructure\Dto\Constraints\:
+        resource: '../src/Infrastructure/Dto/Constraints/*Handler.php'
+        public: true
+
+    # Response Data Constraints
+    App\Infrastructure\ResponseData\Constraints\Availability\:
+        resource: '../src/Infrastructure/ResponseData/Constraints/Availability/*Handler.php'
+        public: true
+
+    App\Infrastructure\ResponseData\Constraints\System\:
+        resource: '../src/Infrastructure/ResponseData/Constraints/System/*Handler.php'
+        public: true
+
+    App\Infrastructure\ResponseData\Constraints\Value\:
+        resource: '../src/Infrastructure/ResponseData/Constraints/Value/*Handler.php'
+        public: true
+
+    # Validator
+    App\Infrastructure\Validator\Validator:
+        public: false
+
+# Package
+    App\Package\Hashing\Password:
+        public: false
+
+    App\Package\Jwt\AccessGenerator:
+        public: false
+
+    App\Package\Reflection\Reflection:
+        public: false
+
+# ResponseData
+    App\ResponseData\:
+        resource: '../src/ResponseData/'
+        public: false
+
+# Rest
+    # Request
+    App\Rest\Request:
+        public: false
+
+    # Response
+    App\Rest\Response\Http\HttpResponseCreator:
+        public: false
+
+    App\Rest\Response\Interfaces\FailedHttpResponseCollectorInterface:
+        class: App\Rest\Response\Http\FailedHttpResponseCollector
+        public: false
+
+    App\Rest\Response\Interfaces\SuccessHttpResponseCollectorInterface:
+        class: App\Rest\Response\Http\SuccessHttpResponseCollector
+        public: false
+
+# Security
+    App\Security\Authorization\:
+        resource: '../src/Security/Authorization/*.php'
+        public: false
+
+# Service
+    App\Service\:
+        resource: '../src/Service/'
+        public: false
+
+# UseCase
+    App\UseCase\:
+        resource: '../src/UseCase/'
+        public: false
