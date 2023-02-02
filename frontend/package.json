@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=--openssl-legacy-provider nuxt",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
+    "build": "nuxt build",
     "build_local": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
