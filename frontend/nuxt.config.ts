@@ -4,6 +4,8 @@ import { NuxtConfig } from '@nuxt/types';
 const config: NuxtConfig = {
   dev: false,
 
+  target: 'server',
+
   server: {
     host: '0.0.0.0',
     port: 3000

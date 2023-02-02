@@ -4,9 +4,9 @@ WORKDIR /usr/src/frontend
 
 RUN apk add --update nodejs npm
 
-COPY frontend/ .
+COPY frontend/ /usr/src/frontend
 
-RUN npm install
+RUN npm ci
 RUN npm run build
 
-CMD npm run dev
+CMD npm run start
