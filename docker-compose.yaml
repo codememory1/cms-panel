@@ -5,6 +5,7 @@ services:
     container_name: "${PROJECT_NAME}_nginx"
     image: nginx:stable-alpine
     restart: unless-stopped
+    platform: linux/amd64
     ports:
       - "8091:8091"
     volumes:
@@ -22,6 +23,7 @@ services:
       args:
         workdir: ${API_WORKDIR}
         app_path: ${API_PATH}
+    platform: linux/amd64
     expose:
       - "9001"
     environment:
@@ -36,6 +38,7 @@ services:
     container_name: "${PROJECT_NAME}_postgres"
     image: postgres:14.2
     restart: unless-stopped
+    platform: linux/amd64
     environment:
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
@@ -50,6 +53,7 @@ services:
     build:
       context: ./
       dockerfile: "${DOCKER_ENV_PATH}/frontend/Dockerfile"
+    platform: linux/amd64
     volumes:
       - "./frontend:/usr/src/frontend"
     ports:
@@ -64,6 +68,7 @@ services:
       args:
         workdir: ${API_WORKDIR}
         app_path: ${API_PATH}
+    platform: linux/amd64
     volumes:
       - "${API_PATH}:${API_WORKDIR}"
       - "${DOCKER_ENV_PATH}/php${PHP_VERSION}-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini"
