@@ -25,6 +25,6 @@ WORKDIR /usr/src/frontend
 
 COPY --from=builder /usr/src/frontend  .
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD [ "yarn", "start" ]
