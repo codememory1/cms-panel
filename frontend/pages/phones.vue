@@ -69,6 +69,18 @@ import UpdateModal from '~/components/Modal/UpdateModal.vue';
 import DeleteModal from '~/components/Modal/DeleteModal.vue';
 import CrudService from '~/services/crud-service';
 
+type InputDataType = {
+  number: {
+    error: boolean;
+    value: string | null;
+  };
+
+  status: {
+    error: boolean;
+    value: string | null;
+  };
+};
+
 @Component({
   layout: 'AdminLayout',
   middleware: ['auth'],
@@ -95,7 +107,7 @@ export default class Phones extends Vue {
     { text: 'Недоступный', value: 'NOT_ALLOWED' }
   ];
 
-  private inputData = {
+  private inputData: InputDataType = {
     number: {
       error: false,
       value: null
