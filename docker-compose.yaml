@@ -5,7 +5,6 @@ services:
     container_name: "${PROJECT_NAME}_nginx"
     image: nginx:stable-alpine
     restart: unless-stopped
-    platform: linux/arm64
     ports:
       - "8091:8091"
     volumes:
