@@ -3,7 +3,7 @@ version: '3.7'
 services:
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
-    image: nginx:stable-alpine
+    image: amd64/nginx:stable-alpine
     restart: unless-stopped
     platform: linux/amd64
     ports:
