@@ -24,6 +24,7 @@ export default class Transactions extends Vue {
   private readonly headers = {
     id: 'Идентификатор',
     type: 'Тип',
+    'phone.id': 'Идентификатор телефона',
     'card.name': 'Имя карточки',
     'card.number': 'Последние цифры карты',
     completed_on_time: 'Время завершения',

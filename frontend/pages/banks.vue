@@ -18,7 +18,7 @@
         <v-text-field
           v-model="inputData.title.value"
           :error="inputData.title.error"
-          label="Номер телефона"
+          label="Название банка"
         />
         <v-text-field
           v-model="inputData.number.value"
@@ -45,7 +45,7 @@
       </CreateModal>
       <DeleteModal
         ref="deleteModal"
-        modal-title="Удаление телефона"
+        modal-title="Удаление банка"
         @delete="deleteEntity"
         @close="crudService.closeDeleteModal()"
       />

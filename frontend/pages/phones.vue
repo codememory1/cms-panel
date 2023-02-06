@@ -96,6 +96,7 @@ export default class Phones extends Vue {
     id: 'Идентификатор',
     'number.country_code': 'Код страны',
     'number.number': 'Телефон',
+    'balance.balance': 'Баланс',
     status: 'Статус',
     created_at: 'Создано в',
     updated_at: 'Обновлено в',
