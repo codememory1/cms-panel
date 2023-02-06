@@ -11,6 +11,9 @@ final class PhoneResponseData extends AbstractResponseData
 
     #[RDCV\Phone]
     private array $number = [];
+
+    #[RDCV\CallbackResponseData(BalanceResponseData::class)]
+    private array $balance = [];
     private ?string $status = null;
 
     #[RDCV\DateTime]
