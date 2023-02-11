@@ -70,15 +70,33 @@ class Role implements EntityInterface, LogInterface
      */
     public function setPermissions(array $permissions): self
     {
-        $this->permissions->clear();
+        $permissions = new ArrayCollection($permissions);
 
         foreach ($permissions as $permission) {
+            $permissionAdded = $this->permissions->exists(static function (int $key, RolePermission $rolePermission) use ($permission) {
+                return $rolePermission->getPermission()->getKey() === $permission->getKey();
+            });
+
+            if ($permissionAdded) {
+                continue;
+            }
+
             $rolePermission = new RolePermission();
 
             $rolePermission->setPermission($permission);
-            $rolePermission->setRole($this);
 
-            $this->permissions[] = $rolePermission;
+            $this->addPermission($rolePermission);
+        }
+
+        /** @var RolePermission $addedPermission */
+        foreach ($this->permissions as $addedPermission) {
+            $permissionExist = $permissions->exists(static function (int $key, Permission $permission) use ($addedPermission) {
+                return $permission->getKey() === $addedPermission->getPermission()->getKey();
+            });
+
+            if (!$permissionExist) {
+                $this->permissions->removeElement($addedPermission);
+            }
         }
 
         return $this;
