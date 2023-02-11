@@ -5,14 +5,12 @@ namespace App\EventListener\Doctrine;
 use App\Entity\ActionLog;
 use App\Entity\Interfaces\LogInterface;
 use App\Service\AuthorizedUser;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use libphonenumber\PhoneNumber;
 
 final class EntityUpdateLogEventListener
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
         private readonly AuthorizedUser $authorizedUser
     ) {
     }
@@ -22,7 +20,7 @@ final class EntityUpdateLogEventListener
         $entity = $args->getObject();
 
         if ($entity instanceof LogInterface && $entity->trackActivities()) {
-            $changes = $this->em->getUnitOfWork()->getEntityChangeSet($entity);
+            $changes = $args->getObjectManager()->getUnitOfWork()->getEntityChangeSet($entity);
             $payload = [
                 '_id' => $entity->getId(),
                 '_mutable_properties' => []
@@ -44,8 +42,8 @@ final class EntityUpdateLogEventListener
             $actionLog->setAction('UPDATE');
             $actionLog->setPayload($payload);
 
-            $this->em->persist($actionLog);
-            $this->em->flush($actionLog);
+            $args->getObjectManager()->persist($actionLog);
+            $args->getObjectManager()->flush($actionLog);
         }
     }
 
