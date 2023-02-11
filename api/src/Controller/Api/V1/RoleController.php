@@ -13,6 +13,7 @@ use App\ResponseData\RoleResponseData;
 use App\Rest\Controller\AbstractController;
 use App\Rest\Response\Interfaces\HttpResponseCollectorInterface;
 use App\UseCase\Role\CreateRole;
+use App\UseCase\Role\DeleteRole;
 use App\UseCase\Role\UpdateRole;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,5 +44,15 @@ class RoleController extends AbstractController
         UpdateRole $updateRole
     ): HttpResponseCollectorInterface {
         return $this->responseData($responseData, $updateRole->process($transformer->transformFromRequest($role)));
+    }
+
+    #[Route('/{role_id<[^\/]+>}/delete', methods: Request::METHOD_DELETE)]
+    #[Authorization(PermissionEnum::DELETE_ROLE)]
+    public function delete(
+        #[EntityNotFound(EntityNotFoundException::class, 'role')] Role $role,
+        RoleResponseData $responseData,
+        DeleteRole $deleteRole
+    ): HttpResponseCollectorInterface {
+        return $this->responseData($responseData, $deleteRole->process($role));
     }
 }
