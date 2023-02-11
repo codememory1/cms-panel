@@ -24,7 +24,7 @@ class Role implements EntityInterface, LogInterface
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\OneToMany(mappedBy: 'role', targetEntity: RolePermission::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: RolePermission::class, cascade: ['persist', 'remove'])]
     private Collection $permissions;
 
     #[ORM\OneToMany(mappedBy: 'role', targetEntity: User::class, cascade: ['remove'])]
