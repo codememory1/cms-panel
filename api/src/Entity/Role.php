@@ -76,8 +76,9 @@ class Role implements EntityInterface, LogInterface
             $rolePermission = new RolePermission();
 
             $rolePermission->setPermission($permission);
+            $rolePermission->setRole($this);
 
-            $this->addPermission($rolePermission);
+            $this->permissions[] = $rolePermission;
         }
 
         return $this;

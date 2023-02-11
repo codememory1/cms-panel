@@ -14,10 +14,6 @@ final class DeleteRole
 
     public function process(Role $role): Role
     {
-        foreach ($role->getPermissions() as $permission) {
-            $this->flusher->remove($permission);
-        }
-
         $this->flusher->remove($role);
 
         return $role;
