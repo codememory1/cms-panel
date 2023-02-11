@@ -45,9 +45,8 @@ final class EntityUpdateLogEventListener
             $actionLog->setPayload($payload);
 
             $this->em->persist($actionLog);
+            $this->em->flush($actionLog);
         }
-
-        $this->em->flush();
     }
 
     private function converterValue(mixed $value): mixed
