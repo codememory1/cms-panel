@@ -91,6 +91,58 @@ class Phone implements EntityInterface, LogInterface
         return $this->transactions;
     }
 
+    public function getSumEnrollment(): int
+    {
+        $sum = 0;
+
+        foreach ($this->getTransactions() as $transaction) {
+            if ($transaction->getType() === 'enrollment') {
+                $sum += $transaction->getSum();
+            }
+        }
+
+        return $sum;
+    }
+
+    public function getSumTransfer(): int
+    {
+        $sum = 0;
+
+        foreach ($this->getTransactions() as $transaction) {
+            if ($transaction->getType() === 'transfer') {
+                $sum += $transaction->getSum();
+            }
+        }
+
+        return $sum;
+    }
+
+    public function getSumPayment(): int
+    {
+        $sum = 0;
+
+        foreach ($this->getTransactions() as $transaction) {
+            if ($transaction->getType() === 'payment') {
+                $sum += $transaction->getSum();
+            }
+        }
+
+        return $sum;
+    }
+
+    public function getSumPurchase(): int
+    {
+        $sum = 0;
+
+        foreach ($this->getTransactions() as $transaction) {
+            if ($transaction->getType() === 'purchase') {
+                $sum += $transaction->getSum();
+            }
+        }
+
+        return $sum;
+    }
+
     public function addTransaction(Transaction $transaction): self
     {
         if (!$this->transactions->contains($transaction)) {
