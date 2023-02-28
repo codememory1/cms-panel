@@ -194,7 +194,7 @@ final class ParserCommand extends Command
             $transaction->setCompletedOnTime($record['date']);
             $transaction->setSum($match['sum'] ?? null);
 
-            if (array_key_exists('balance', $match) && $record['date'] > $lastRecord['date']) {
+            if (array_key_exists('balance', $match) && $record['date'] >= $lastRecord['date']) {
                 $allowedPhone->getBalance()->setBalance($match['balance']);
             }
 
