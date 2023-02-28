@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\BankExpression;
+use App\Repository\BankExpressionRepository;
 use App\Repository\BankRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -58,7 +58,8 @@ final class UpdateBankExpressionCommand extends Command
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly BankRepository $bankRepository
+        private readonly BankRepository $bankRepository,
+        private readonly BankExpressionRepository $bankExpressionRepository
     )
     {
         parent::__construct();
@@ -69,20 +70,20 @@ final class UpdateBankExpressionCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->expression as $bankNumber => $expressions) {
-            $bank = $this->bankRepository->findByNumber($bankNumber);
-            $bankExpression = new BankExpression();
+            $bankExpression = $this->bankExpressionRepository->findOneBy([
+                'bank' => $this->bankRepository->findByNumber($bankNumber)
+            ]);
 
-            $bankExpression->setTrackActivities(false);
-            $bankExpression->setBank($bank);
-            $bankExpression->setTransfer($expressions['transfer']);
-            $bankExpression->setEnrollment($expressions['enrollment']);
-            $bankExpression->setPayment($expressions['payment']);
-            $bankExpression->setPurchase($expressions['purchase']);
+            if (null !== $bankExpression) {
+                $bankExpression->setTrackActivities(false);
+                $bankExpression->setTransfer($expressions['transfer']);
+                $bankExpression->setEnrollment($expressions['enrollment']);
+                $bankExpression->setPayment($expressions['payment']);
+                $bankExpression->setPurchase($expressions['purchase']);
 
-            $this->em->persist($bankExpression);
+                $this->em->flush($bankExpression);
+            }
         }
-
-        $this->em->flush();
 
         $io->info('Success update bank expressions');
 
