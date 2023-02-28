@@ -6,7 +6,9 @@ use App\Entity\Interfaces\EntityInterface;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\IdentifierTrait;
 use App\Repository\TransactionRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table('transactions')]
@@ -94,9 +96,12 @@ class Transaction implements EntityInterface
         return $this;
     }
 
-    public function getCompletedOnTime(): ?string
+    /**
+     * @throws Exception
+     */
+    public function getCompletedOnTime(): DateTime
     {
-        return $this->completedOnTime;
+        return new DateTime($this->completedOnTime);
     }
 
     public function setCompletedOnTime(string $completedOnTime): self

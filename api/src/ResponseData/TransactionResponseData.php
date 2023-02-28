@@ -15,6 +15,8 @@ final class TransactionResponseData extends AbstractResponseData
     private ?string $hash = null;
     private ?string $type = null;
     private array $card = [];
+
+    #[RDCV\DateTime]
     private ?string $completedOnTime = null;
     private ?float $sum = null;
 

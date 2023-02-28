@@ -12,7 +12,9 @@ use App\Enum\PhoneStatusEnum;
 use App\Repository\PhoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use libphonenumber\PhoneNumber;
 
 #[ORM\Entity(repositoryClass: PhoneRepository::class)]
@@ -91,12 +93,23 @@ class Phone implements EntityInterface, LogInterface
         return $this->transactions;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getSumEnrollment(): int
     {
         $sum = 0;
+        $maxDate = null;
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
+                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
+            }
 
-        foreach ($this->getTransactions() as $transaction) {
-            if ($transaction->getType() === 'enrollment') {
+            return $transaction->getType() === 'enrollment';
+        });
+
+        foreach ($transactions as $transaction) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
                 $sum += $transaction->getSum();
             }
         }
@@ -104,12 +117,23 @@ class Phone implements EntityInterface, LogInterface
         return $sum;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getSumTransfer(): int
     {
         $sum = 0;
+        $maxDate = null;
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
+                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
+            }
 
-        foreach ($this->getTransactions() as $transaction) {
-            if ($transaction->getType() === 'transfer') {
+            return $transaction->getType() === 'transfer';
+        });
+
+        foreach ($transactions as $transaction) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
                 $sum += $transaction->getSum();
             }
         }
@@ -117,12 +141,23 @@ class Phone implements EntityInterface, LogInterface
         return $sum;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getSumPayment(): int
     {
         $sum = 0;
+        $maxDate = null;
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
+                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
+            }
 
-        foreach ($this->getTransactions() as $transaction) {
-            if ($transaction->getType() === 'payment') {
+            return $transaction->getType() === 'payment';
+        });
+
+        foreach ($transactions as $transaction) {
+            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
                 $sum += $transaction->getSum();
             }
         }
