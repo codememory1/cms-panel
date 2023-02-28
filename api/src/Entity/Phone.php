@@ -10,6 +10,7 @@ use App\Entity\Traits\LogTrait;
 use App\Entity\Traits\TimestampTrait;
 use App\Enum\PhoneStatusEnum;
 use App\Repository\PhoneRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -99,19 +100,13 @@ class Phone implements EntityInterface, LogInterface
     public function getSumEnrollment(): int
     {
         $sum = 0;
-        $maxDate = null;
-        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
-                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
-            }
-
-            return $transaction->getType() === 'enrollment';
+        $nowDate = (new DateTime())->format('Y-m-d');
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use ($nowDate) {
+            return $transaction->getType() === 'enrollment' && $transaction->getCompletedOnTime()->format('Y-m-d') === $nowDate;
         });
 
         foreach ($transactions as $transaction) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
-                $sum += $transaction->getSum();
-            }
+            $sum += $transaction->getSum();
         }
 
         return $sum;
@@ -123,19 +118,13 @@ class Phone implements EntityInterface, LogInterface
     public function getSumTransfer(): int
     {
         $sum = 0;
-        $maxDate = null;
-        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
-                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
-            }
-
-            return $transaction->getType() === 'transfer';
+        $nowDate = (new DateTime())->format('Y-m-d');
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use ($nowDate) {
+            return $transaction->getType() === 'transfer' && $transaction->getCompletedOnTime()->format('Y-m-d') === $nowDate;
         });
 
         foreach ($transactions as $transaction) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
-                $sum += $transaction->getSum();
-            }
+            $sum += $transaction->getSum();
         }
 
         return $sum;
@@ -147,19 +136,13 @@ class Phone implements EntityInterface, LogInterface
     public function getSumPayment(): int
     {
         $sum = 0;
-        $maxDate = null;
-        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use (&$maxDate) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') > $maxDate) {
-                $maxDate = $transaction->getCompletedOnTime()->format('Y-m-d');
-            }
-
-            return $transaction->getType() === 'payment';
+        $nowDate = (new DateTime())->format('Y-m-d');
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use ($nowDate) {
+            return $transaction->getType() === 'payment' && $transaction->getCompletedOnTime()->format('Y-m-d') === $nowDate;
         });
 
         foreach ($transactions as $transaction) {
-            if ($transaction->getCompletedOnTime()->format('Y-m-d') === $maxDate) {
-                $sum += $transaction->getSum();
-            }
+            $sum += $transaction->getSum();
         }
 
         return $sum;
@@ -168,11 +151,13 @@ class Phone implements EntityInterface, LogInterface
     public function getSumPurchase(): int
     {
         $sum = 0;
+        $nowDate = (new DateTime())->format('Y-m-d');
+        $transactions = $this->getTransactions()->filter(static function (Transaction $transaction) use ($nowDate) {
+            return $transaction->getType() === 'purchase' && $transaction->getCompletedOnTime()->format('Y-m-d') === $nowDate;
+        });
 
-        foreach ($this->getTransactions() as $transaction) {
-            if ($transaction->getType() === 'purchase') {
-                $sum += $transaction->getSum();
-            }
+        foreach ($transactions as $transaction) {
+            $sum += $transaction->getSum();
         }
 
         return $sum;
