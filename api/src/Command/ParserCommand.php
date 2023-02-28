@@ -8,7 +8,6 @@ use App\Enum\PhoneStatusEnum;
 use App\Repository\BankRepository;
 use App\Repository\PhoneRepository;
 use App\Repository\TransactionRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use libphonenumber\PhoneNumber;
@@ -18,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -63,13 +61,15 @@ final class ParserCommand extends Command
                 if (null !== $content) {
                     $io->info('Получили контент страницы, начинаем получение всех записей');
 
-                    foreach ($this->getRecords(new Crawler($content)) as $i => $record) {
+                    $records = $this->getRecords(new Crawler($content));
+
+                    foreach ($records as $i => $record) {
                         $number = $i + 1;
                         $record['phone_number'] = $phoneNumber;
                         $record['allowed_phone'] = $phone;
 
                         $io->info("Парсим $number запись и записываем в базу данных");
-                        $this->parseRecord($record);
+                        $this->parseRecord($record, $records[array_key_last($records)]);
                     }
                 } else {
                     $io->info('Получили контент, номер недействителен - меняем статус');
@@ -139,31 +139,31 @@ final class ParserCommand extends Command
         return $records;
     }
 
-    private function parseRecord(array $record): void
+    private function parseRecord(array $record, array $lastRecord): void
     {
         $bank = $this->bankRepository->findByNumber((int) $record['bank']);
         $messageIsParsed = false;
 
         if (null !== $bank && null !== $bank->getExpression()) {
-            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getTransfer(), $record, 'transfer');
-            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getEnrollment(), $record, 'enrollment');
-            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getPayment(), $record, 'payment');
-            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getPurchase(), $record, 'purchase');
+            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getTransfer(), $record, $lastRecord, 'transfer');
+            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getEnrollment(), $record, $lastRecord, 'enrollment');
+            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getPayment(), $record, $lastRecord, 'payment');
+            $this->parseMessageByType($messageIsParsed, $bank->getExpression()->getPurchase(), $record, $lastRecord, 'purchase');
         }
     }
 
-    private function parseMessageByType(bool &$isParsed, array $expressions, array $record, string $type): void
+    private function parseMessageByType(bool &$isParsed, array $expressions, array $record, array $lastRecord, string $type): void
     {
         if (!$isParsed) {
-            $isParsed = $this->parseMessage($expressions, $record, $type);
+            $isParsed = $this->parseMessage($expressions, $record, $lastRecord, $type);
         }
     }
 
-    private function parseMessage(array $expressions, array $record, string $type): bool
+    private function parseMessage(array $expressions, array $record, array $lastRecord, string $type): bool
     {
         foreach ($expressions as $expression) {
             if (1 === preg_match("/$expression/", $record['message'], $match)) {
-                $this->loadTransaction($record, $match, $type);
+                $this->loadTransaction($record, $lastRecord, $match, $type);
 
                 return true;
             }
@@ -172,7 +172,7 @@ final class ParserCommand extends Command
         return false;
     }
 
-    private function loadTransaction(array $record, array $match, string $type): void
+    private function loadTransaction(array $record, array $lastRecord, array $match, string $type): void
     {
         $allowedPhone = $record['allowed_phone'];
 
@@ -194,7 +194,7 @@ final class ParserCommand extends Command
             $transaction->setCompletedOnTime($record['date']);
             $transaction->setSum($match['sum'] ?? null);
 
-            if (array_key_exists('balance', $match)) {
+            if (array_key_exists('balance', $match) && $record['date'] > $lastRecord['date']) {
                 $allowedPhone->getBalance()->setBalance($match['balance']);
             }
 
