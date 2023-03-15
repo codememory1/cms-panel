@@ -77,7 +77,12 @@ export default class CrudService {
     this.closeEditableModal();
   }
 
-  public async allRequest(route: string, store: Store<any>, withTable: boolean = false) {
+  public async allRequest(
+    route: string,
+    store: Store<any>,
+    withTable: boolean = false,
+    callbackResponse?: (response: any) => void
+  ) {
     if (withTable && this.app.$refs.table !== undefined) {
       (this.app.$refs.table as BaseTable).setIsLoading(true);
     }
@@ -88,6 +93,10 @@ export default class CrudService {
           Authorization: `Bearer ${store.getters['modules/global-module/accessToken']}`
         }
       });
+
+      if (undefined !== callbackResponse) {
+        callbackResponse(response.data);
+      }
 
       this.entities = response.data.data;
     } catch (e) {

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Transaction;
+use Doctrine\ORM\Query;
 
 /**
  * @template-extends AbstractRepository<Transaction>
@@ -15,5 +16,10 @@ final class TransactionRepository extends AbstractRepository
     public function findByHash(string $hash): ?Transaction
     {
         return $this->findOneBy(['hash' => $hash]);
+    }
+
+    public function findAllQuery(): Query
+    {
+        return $this->getQueryBuilder()->getQuery();
     }
 }
