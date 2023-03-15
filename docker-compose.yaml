@@ -25,7 +25,7 @@ services:
         app_path: ${API_PATH}
     platform: linux/amd64
     expose:
-      - "9001"
+      - "9000"
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
