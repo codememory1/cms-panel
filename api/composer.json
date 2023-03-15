@@ -23,7 +23,8 @@
         "symfony/http-client": "6.2.*",
         "symfony/runtime": "6.2.*",
         "symfony/validator": "6.2.*",
-        "symfony/yaml": "6.2.*"
+        "symfony/yaml": "6.2.*",
+        "ergebnis/json-schema-validator": "4.0"
     },
     "config": {
         "allow-plugins": {
