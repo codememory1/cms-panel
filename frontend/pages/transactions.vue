@@ -53,7 +53,7 @@ export default class Transactions extends Vue {
       this.$store,
       true,
       (response) => {
-        this.pagination.numberPages = response.meta.pagination.numberPages;
+        this.pagination.numberPages = response.meta.pagination.total_pages;
       }
     );
   }
