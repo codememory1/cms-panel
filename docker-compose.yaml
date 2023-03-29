@@ -24,6 +24,7 @@ services:
         workdir: ${API_WORKDIR}/api
         app_path: ${API_PATH}
     platform: linux/amd64
+    restart: unless-stopped
     expose:
       - "9000"
     environment:
