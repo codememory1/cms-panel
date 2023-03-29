@@ -56,7 +56,7 @@ services:
       dockerfile: "${DOCKER_ENV_PATH}/frontend/Dockerfile"
     platform: linux/amd64
     volumes:
-      - "./frontend:${API_WORKDIR}/frontend"
+      - "./frontend:/usr/src/frontend"
     ports:
       - "3001:3001"
     restart: unless-stopped
