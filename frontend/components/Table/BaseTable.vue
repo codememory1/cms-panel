@@ -7,6 +7,7 @@
     :sort-by="sortByKeys"
     :sort-desc="[true, false]"
     class="elevation-1"
+    @click:row="$emit('clickByRow', $event)"
   >
     <template #top>
       <v-toolbar flat>
@@ -24,8 +25,8 @@
     <template #item.actions="{ item }">
       <slot name="actionsStart" :item="item" />
       <template v-if="showBaseActions">
-        <v-icon small class="mr-2" @click="editEntity(item)">mdi-pencil</v-icon>
-        <v-icon small @click="deleteEntity(item)">mdi-delete</v-icon>
+        <v-icon small class="mr-2" @click.stop="editEntity(item)">mdi-pencil</v-icon>
+        <v-icon small @click.stop="deleteEntity(item)">mdi-delete</v-icon>
       </template>
       <slot name="actionsEnd" :item="item" />
     </template>
