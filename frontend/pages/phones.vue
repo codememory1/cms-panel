@@ -7,8 +7,16 @@
     :sort-by-keys="['created_at', 'updated_at']"
     @openDelete="openDeleteModal"
     @openEdit="openEditModal"
+    @clickByRow="clickByRow"
   >
     <template #modals>
+      <PhoneTransactionModal
+        ref="phoneTransactionModal"
+        :is-loading="isLoadingPhoneTransaction"
+        :number-pages="phoneTransactionTotalPages"
+        :data="phoneTransactionData"
+        @changePage="phoneTransactionChangePage"
+      />
       <UpdateModal
         ref="editModal"
         modal-title="Редактирование телефона"
@@ -67,6 +75,7 @@ import BaseTable from '~/components/Table/BaseTable.vue';
 import CreateModal from '~/components/Modal/CreateModal.vue';
 import UpdateModal from '~/components/Modal/UpdateModal.vue';
 import DeleteModal from '~/components/Modal/DeleteModal.vue';
+import PhoneTransactionModal from '~/components/Modal/PhoneTransactionModal.vue';
 import CrudService from '~/services/crud-service';
 
 type InputDataType = {
@@ -88,7 +97,8 @@ type InputDataType = {
     BaseTable,
     CreateModal,
     UpdateModal,
-    DeleteModal
+    DeleteModal,
+    PhoneTransactionModal
   }
 })
 export default class Phones extends Vue {
@@ -123,7 +133,13 @@ export default class Phones extends Vue {
     }
   };
 
+  private isLoadingPhoneTransaction: boolean = true;
+  private phoneTransactionData: object | null = null;
+  private phoneTransactionTotalPages: number = 1;
+  private showTransactionByPhone: any = null;
+
   private readonly crudService: CrudService = new CrudService(this);
+  private readonly phoneTransactionService: CrudService = new CrudService(this);
 
   public async mounted(): Promise<void> {
     await this.crudService.allRequest('/phone/all', this.$store, true);
@@ -153,6 +169,41 @@ export default class Phones extends Vue {
       `/phone/${this.crudService.getEditedEntity().id}/edit`,
       this.inputData
     );
+  }
+
+  private async clickByRow(item: any): Promise<void> {
+    this.showTransactionByPhone = item;
+    (this.$refs as any).phoneTransactionModal.open();
+
+    await this.phoneTransactionService.allRequest(
+      `/transaction/${item.id}/all?pagination[page]=1&pagination[limit]=20`,
+      this.$store,
+      true,
+      (response) => {
+        this.phoneTransactionTotalPages = response.meta.pagination.total_pages;
+      }
+    );
+
+    this.phoneTransactionData = this.phoneTransactionService.getEntities();
+
+    this.isLoadingPhoneTransaction = false;
+  }
+
+  private async phoneTransactionChangePage(page: number): Promise<void> {
+    this.isLoadingPhoneTransaction = true;
+
+    await this.phoneTransactionService.allRequest(
+      `/transaction/${this.showTransactionByPhone.id}/all?pagination[page]=${page}&pagination[limit]=20`,
+      this.$store,
+      true,
+      (response) => {
+        this.phoneTransactionTotalPages = response.meta.pagination.total_pages;
+      }
+    );
+
+    this.phoneTransactionData = this.phoneTransactionService.getEntities();
+
+    this.isLoadingPhoneTransaction = false;
   }
 }
 </script>
